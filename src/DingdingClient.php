@@ -170,9 +170,16 @@ class DingdingClient {
      * @param string $unionid
      * @param string $lang
      * @return array
+     * @throw \RuntimeException
      */
     public function getUserDetailByUnionid($accessToken, $unionid, $lang = null) {
         $userId = $this->getUseridByUnionid($accessToken, $unionid);
+
+        //如果没找到userid, 抛出异常
+        if($userId['errcode'] != 0) {
+            throw new \RuntimeException($userId['errmsg']);
+        }
+
         $userId = $userId['userid'];
 
         return $this->getUserDetail($accessToken, $userId, $lang);
